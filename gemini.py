@@ -1,7 +1,8 @@
-import os
+#import os
 import google.generativeai as genai
+import streamlit as st
 
-genai.configure(api_key=os.getenv("RESUME_AI_RANKER_API_KEY"))
+genai.configure(api_key=st.secrets["RESUME_AI_RANKER_API_KEY"])
 
 model = genai.GenerativeModel("gemini-3.5-flash")
 
