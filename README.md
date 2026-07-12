@@ -2,161 +2,161 @@
 
 An AI-powered resume screening application that helps recruiters evaluate and rank candidates based on their suitability for a job description.
 
-The system uses Natural Language Processing (NLP), transformer-based semantic analysis, skill matching, and Generative AI to provide a more meaningful evaluation than traditional keyword-based resume filtering.
+The system combines transformer-based Natural Language Processing (NLP), semantic relevance scoring, skill matching and generative AI to provide a more meaningful evaluation than traditional keyword-based resume filtering.
+
+---
 
 ## Live Demo
 
-Try the application here:
+**Try the deployed application here:**
 
-https://resume-ai-ranker.streamlit.app/
+**https://resume-ai-ranker.streamlit.app/**
+
+The screenshots below showcase some of the application's core features. For the complete interactive experience, including resume uploads, candidate ranking, sentence-level explanations, and AI-generated hiring summaries, visit the live application.
+
+---
+
+# Application Preview
+
+## Home Page
+
+<img src="images/RAIR1.png" width="900">
+
+---
+
+## Upload Job Description & Resumes
+
+<img src="images/RAIR2.png" width="900">
+
+---
+
+## Candidate Ranking
+
+<img src="images/RAIR3.png" width="900">
+
+---
+
+## Additional Candidate Results
+
+<img src="images/RAIR4.png" width="900">
+
+---
+
+## AI Hiring Summary
+
+<img src="images/RAIR6.png" width="900">
+
+<img src="images/RAIR7.png" width="900">
+
+---
 
 ## Features
 
 ### Resume Upload and Processing
 
-* Upload multiple resumes in PDF format
-* Automatically extract resume content
-* Analyze multiple candidates simultaneously
+* Upload multiple PDF resumes simultaneously
+* Extract text from resumes using **PyMuPDF**
+* Automatically prepare resumes for semantic analysis
 
 ### Intelligent Candidate Ranking
 
-* Rank candidates based on their relevance to a given job description
-* Generate an overall compatibility score
-* Compare candidates using both technical skills and contextual similarity
+Instead of relying solely on keyword matching, the application uses a **CrossEncoder transformer model (`ms-marco-MiniLM-L6-v2`)** to evaluate the semantic relationship between each resume and the job description.
+
+Unlike traditional embedding-based similarity methods, the CrossEncoder jointly processes the resume and job description before producing a relevance score, allowing it to better understand context, wording, and the relationship between both documents.
+
+Each candidate receives an overall ranking based on:
+
+* Semantic relevance score
+* Skill matching score
+
+These scores are combined to produce a final candidate ranking.
 
 ### Explainable Results
 
-For each candidate, the system provides:
+For every candidate, the application provides:
 
-* Overall ranking score
+* Final ranking score
 * Semantic relevance score
 * Skill matching score
 * Matched skills
 * Missing skills
-* Sentence-level explanations showing relevant resume sections
+* Sentence-level explanations showing which resume sections best match the job description
 
-### AI-Generated Hiring Summary
+### AI Hiring Summary
 
-Using Gemini, recruiters can generate a structured candidate evaluation containing:
+Google Gemini is used to generate recruiter-style hiring reports based on the candidate's resume and ranking results.
+
+Each AI summary includes:
 
 * Overall candidate fit
 * Key strengths
 * Potential skill gaps
 * Hiring recommendation
 
-## Technical Approach
-
-### 1. Resume Text Extraction
-
-Uploaded PDF resumes are converted into machine-readable text using **PyMuPDF**, allowing the system to analyze the candidate's experience, skills, and qualifications.
-
-### 2. Skill-Based Analysis
-
-The application extracts technical skills from both the resume and job description using a predefined skill database.
-
-This provides a direct comparison of required and available skills, helping identify:
-
-* Skills the candidate already possesses
-* Skills that may be missing
-
-### 3. Transformer-Based Semantic Matching
-
-Instead of relying only on keyword overlap, the system uses a **CrossEncoder transformer model** to evaluate the relationship between the resume and job description.
-
-The model reads both texts together and produces a relevance score based on contextual meaning.
-
-For example, it can recognize that experience with "building neural networks using PyTorch" is relevant to a requirement for "deep learning experience" even when the exact wording differs.
-
-### 4. Candidate Ranking
-
-The final ranking score combines:
-
-* Semantic relevance between resume and job description
-* Technical skill compatibility
-
-Candidates are then sorted according to their overall suitability.
-
-### 5. Generative AI Assistance
-
-The Gemini API is used to provide additional recruiter-style analysis based on the ranking results.
-
-The AI summary acts as an interpretation layer, helping users understand why a candidate may or may not be suitable.
+---
 
 ## Tech Stack
 
 ### Python
 
-The core programming language used for:
-
-* Resume processing
-* NLP model integration
-* Scoring logic
-* Application backend
+Used to implement the application's backend logic, resume processing pipeline, ranking algorithm, and AI integration.
 
 ### Streamlit
 
-A Python-based web framework used to create the interactive user interface.
+Provides the interactive web interface for:
 
-Streamlit allows the application to:
+* Uploading resumes
+* Entering job descriptions
+* Displaying ranked candidates
+* Viewing explanations
+* Generating AI hiring summaries
 
-* Accept resume uploads
-* Display rankings dynamically
-* Provide interactive explanations and AI-generated summaries
+### Sentence Transformers (CrossEncoder)
 
-### Sentence Transformers / CrossEncoder
+The project uses the **CrossEncoder `ms-marco-MiniLM-L6-v2`** model from Sentence Transformers.
 
-Transformer-based NLP models used for semantic understanding.
-
-The project uses a CrossEncoder model (`ms-marco-MiniLM-L6-v2`) which evaluates pairs of text inputs together:
-
-```
-(Resume, Job Description) → Relevance Score
-```
-
-Unlike traditional keyword matching, this approach captures relationships between concepts and evaluates meaning from context.
+Unlike cosine similarity approaches that compare two independently generated embeddings, the CrossEncoder jointly processes the resume and job description and directly predicts a semantic relevance score. This generally produces more accurate rankings because the model evaluates both texts together instead of comparing them after separate encoding.
 
 ### Google Gemini API
 
-Used for Generative AI capabilities.
-
-Gemini converts ranking data into structured hiring insights, including:
-
-* Candidate strengths
-* Areas for improvement
-* Hiring recommendations
+Used to generate structured recruiter-style hiring summaries from the ranking results and extracted resume content.
 
 ### PyMuPDF
 
-A PDF processing library used to extract text from uploaded resumes.
+Extracts machine-readable text from uploaded PDF resumes.
 
-### NumPy and Scikit-learn
+### NumPy
 
-Used for:
+Used for numerical computations and score normalization within the ranking pipeline.
 
-* Numerical operations
-* Similarity calculations
-* Supporting machine learning workflows
+---
 
 ## Project Structure
 
 ```text
 resume-ai/
 │
-├── app.py              # Streamlit interface
-├── utils.py            # Resume processing and ranking pipeline
-├── gemini.py           # Gemini API integration
-├── requirements.txt    # Dependencies
-└── README.md
+├── app.py                 # Streamlit application
+├── utils.py               # Resume processing and ranking logic
+├── gemini.py              # Google Gemini integration
+├── requirements.txt       # Project dependencies
+├── README.md
+└── images/
+    ├── RAIR1.png
+    ├── RAIR2.png
+    ├── RAIR3.png
+    ├── RAIR4.png
+    ├── RAIR5.png
+    ├── RAIR6.png
+    └── RAIR7.png
 ```
+
+---
 
 ## Future Improvements
 
-* Automatic skill extraction using LLMs
-* Support for additional document formats
-* More advanced resume section detection
-* Recruiter feedback-based ranking improvements
+* Support additional resume formats (DOCX, TXT)
+* Recruiter feedback-based ranking refinement
 * Candidate comparison dashboard
-
-## Author
-
-Built as an AI/NLP portfolio project exploring practical applications of transformer models, semantic search, and Generative AI.
+* Batch AI summary generation
+* Expanded skill extraction using larger domain-specific skill databases
