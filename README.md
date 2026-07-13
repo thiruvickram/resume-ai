@@ -25,8 +25,9 @@ Rather than relying solely on keyword matching, the application combines **trans
 ---
 
 ##  Upload Job Description & Resumes
+### (Also depicting dark mode)
 
-<img src="images/RAIR2.PNG" width="900">
+<img src="images/RAIR8.PNG" width="900">
 
 ---
 
